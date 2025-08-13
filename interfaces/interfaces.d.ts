@@ -1,3 +1,5 @@
+
+//made from mock response we got from TMDB while testing
 interface Movie {
   id: number;
   title: string;
