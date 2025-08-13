@@ -3,7 +3,7 @@ import { TMDB_CONFIG } from "./api";
 export const getMovie = async ({ query }: { query: string }) => {
   const endpoint = `${
     TMDB_CONFIG.BASE_URL
-  }discover/movie?query=${encodeURIComponent(query)}`;
+  }search/movie?query=${encodeURIComponent(query)}`;
 
   const response = await fetch(endpoint, {
     headers: TMDB_CONFIG.headers,

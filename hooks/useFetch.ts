@@ -35,11 +35,11 @@ const useFetch = <T>({ fetchFunction, autoFetch = true }: UseFetchType<T>) => {
     }
   }, []);
 
-  const reset = () => {
+  const reset = useCallback(() => {
     setData(null);
     setLoading(false);
     setError(null);
-  };
+  }, []);
 
   useEffect(() => {
     if (autoFetch) {
