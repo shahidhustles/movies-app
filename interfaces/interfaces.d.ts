@@ -1,4 +1,3 @@
-
 //made from mock response we got from TMDB while testing
 interface Movie {
   id: number;
@@ -22,7 +21,7 @@ interface TrendingMovie {
   movie_id: number;
   title: string;
   count: number;
-  poster_url: string;
+  posterUrl: string;
 }
 
 interface MovieDetails {

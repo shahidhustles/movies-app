@@ -1,4 +1,4 @@
-import { TMDB_CONFIG } from "./api";
+import { TMDB_CONFIG } from "../lib/api";
 
 export const getPopularMovies = async () => {
   const endpoint = `${TMDB_CONFIG.BASE_URL}discover/movie?sort_by=popularity.desc`;

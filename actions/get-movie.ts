@@ -1,4 +1,4 @@
-import { TMDB_CONFIG } from "./api";
+import { TMDB_CONFIG } from "../lib/api";
 
 export const getMovie = async ({ query }: { query: string }) => {
   const endpoint = `${

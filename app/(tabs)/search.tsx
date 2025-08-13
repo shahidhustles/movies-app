@@ -4,7 +4,8 @@ import SearchBar from "@/components/search-bar";
 import { icons } from "@/constants/icons";
 import { images } from "@/constants/images";
 import useFetch from "@/hooks/useFetch";
-import { useEffect, useState } from "react";
+import { updateSearchCount } from "@/lib/appwrite";
+import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, FlatList, Image, Text, View } from "react-native";
 const Search = () => {
   const {
@@ -19,6 +20,7 @@ const Search = () => {
   });
 
   const [searchQuery, setSearchQuery] = useState("");
+  const lastMovieIdRef = useRef<number | null>(null);
 
   useEffect(() => {
     const timeoutId = setTimeout(async () => {
@@ -26,11 +28,25 @@ const Search = () => {
         await loadMovies();
       } else {
         reset();
+        lastMovieIdRef.current = null; 
       }
     }, 500);
 
     return () => clearTimeout(timeoutId);
   }, [searchQuery, loadMovies, reset]);
+
+  // Only update search count when we get a different movie
+  useEffect(() => {
+    if (movies && movies.length > 0 && movies[0] && searchQuery.trim()) {
+      const currentMovieId = movies[0].id;
+
+      // Only save if this is a different movie than last time
+      if (lastMovieIdRef.current !== currentMovieId) {
+        updateSearchCount(searchQuery, movies[0]);
+        lastMovieIdRef.current = currentMovieId;
+      }
+    }
+  }, [movies, searchQuery]);
 
   return (
     <View className="flex-1 bg-primary">
