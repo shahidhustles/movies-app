@@ -22,7 +22,7 @@ const MovieInfo = ({ label, value }: MovieInfoProps) => {
 
 const Id = () => {
   const { id } = useLocalSearchParams();
-  const { data: movie, loading: isLoading } = useFetch({
+  const { data: movie } = useFetch({
     fetchFunction: () => getMovieDetail(id as string),
     autoFetch: true,
   });
@@ -68,7 +68,11 @@ const Id = () => {
           <View className="flex flex-row justify-between w-1/2">
             <MovieInfo
               label="Budget"
-              value={`$${movie!.budget / 1_000_000}M` || "N/A"}
+              value={
+                movie?.budget !== undefined
+                  ? `$${movie.budget / 1_000_000}M`
+                  : "N/A"
+              }
             />
             <MovieInfo
               label="Revenue"
@@ -87,14 +91,18 @@ const Id = () => {
       </ScrollView>
       <TouchableOpacity
         onPress={router.back}
-        className="absolute bottom-5 left-0 right-0 mx-5 bg-accent rounded-lg py-3.5 flex flex-row items-start z-50"
+        className="absolute bottom-5 left-0 right-0 mx-5 bg-accent rounded-lg py-3.5 flex flex-row items-center z-50"
       >
-        <Image
-          source={icons.arrow}
-          className="size-5 mr-1 mt-0.5 rotate-180"
-          tintColor={"#fff"}
-        />
-        <Text className="text-white font-semibold text-base">Go Back</Text>
+        <View className="flex-1 flex-row items-center justify-center">
+          <Image
+            source={icons.arrow}
+            className="size-5 mr-1 mt-0.5 rotate-180"
+            tintColor={"#fff"}
+          />
+          <Text className="text-white font-semibold text-base text-center">
+            Go Back
+          </Text>
+        </View>
       </TouchableOpacity>
     </View>
   );
