@@ -1,9 +1,11 @@
 import { getPopularMovies } from "@/actions/get-popular-movies";
 import MovieCard from "@/components/movie-card";
 import SearchBar from "@/components/search-bar";
+import TrendingCard from "@/components/trending-card";
 import { icons } from "@/constants/icons";
 import { images } from "@/constants/images";
 import useFetch from "@/hooks/useFetch";
+import { getTrendingMovies } from "@/lib/appwrite";
 import { useRouter } from "expo-router";
 import {
   ActivityIndicator,
@@ -16,6 +18,16 @@ import {
 
 export default function Index() {
   const router = useRouter();
+
+  const {
+    data: trendingMovies,
+    loading: trendingLoading,
+    error: trendingError,
+  } = useFetch({
+    fetchFunction: getTrendingMovies,
+    autoFetch: true,
+  });
+
   const {
     data: movies,
     loading: isLoading,
@@ -43,18 +55,40 @@ export default function Index() {
             placeholder="Search for a movie"
           />
         </View>
-
-        {isLoading && (
-          <ActivityIndicator
-            size={"large"}
-            color={"#0000ff"}
-            className="mt-10 self-center"
-          />
+        {trendingMovies && (
+          <View className="mt-10">
+            <Text className="text-lg mb-3 text-white font-bold ">
+              Trending Movies
+            </Text>
+            <FlatList
+              className="mb-4 mt-3"
+              data={trendingMovies}
+              renderItem={({ item, index }) => (
+                <TrendingCard movie={item} index={index} />
+              )}
+              keyExtractor={(item) => item.movie_id.toString()}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              ItemSeparatorComponent={() => <View className="w-4" />}
+            />
+          </View>
         )}
 
-        {error && (
-          <Text className="text-red-500 text-center mt-5">{error.message}</Text>
-        )}
+        {isLoading ||
+          (trendingLoading && (
+            <ActivityIndicator
+              size={"large"}
+              color={"#0000ff"}
+              className="mt-10 self-center"
+            />
+          ))}
+
+        {error ||
+          (trendingError && (
+            <Text className="text-red-500 text-center mt-5">
+              {error!.message}
+            </Text>
+          ))}
 
         {!isLoading && !error && movies && movies.length > 0 && (
           <>
